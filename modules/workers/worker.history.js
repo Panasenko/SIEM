@@ -51,7 +51,7 @@ class WorkerHistory extends Worker {
                 try {
                     let dataHistory = await ZabbixAPI.getHistory(this._url, this._token, reqParams)
                     this.isError = false
-
+console.log(dataHistory)
                     if (dataHistory.length) {
                         this.triggerRouter.monitoring(dataHistory)
                     }

@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 const app = require('../app')
-const http = require ("http")
+const http = require ('http')
 const config = require('../config')
+const numCPUs = require('os').cpus().length
+
 
 const port = normalizePort(config.app.PORT || '3000')
 app.set('port', port)
-const server = http.createServer(app)
 
+
+const server = http.createServer(app)
 server.listen(port)
 server.on('error', onError)
 server.on('listening', onListening)
-
 
 function normalizePort(val) {
   const port = parseInt(val, 10)
@@ -56,4 +58,27 @@ function onListening() {
       ? 'pipe ' + addr
       : 'port ' + addr.port
   console.log('app start to port ' + bind)
+}
+
+
+if (cluster.isMaster) {
+  console.log(`Master ${process.pid} is running`);
+
+  // Fork workers.
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`);
+  });
+} else {
+  // Workers can share any TCP connection
+  // In this case it is an HTTP server
+  http.createServer((req, res) => {
+    res.writeHead(200);
+    res.end('hello world\n');
+  }).listen(8000);
+
+  console.log(`Worker ${process.pid} started`);
 }

@@ -24,16 +24,16 @@ const EventsSchema = new mongoose.Schema({
         required: true
     },
     "eventTimeStart": {
-        type: Date
+        type: String
     },
     "eventTimeUpdate": {
-        type: Date
+        type: String
     },
     "eventTimeNormalized": {
-        type: Date
+        type: String
     },
     "eventTimeClose": {
-        type: Date
+        type: String
     },
     "lastClock": {
         type: Number

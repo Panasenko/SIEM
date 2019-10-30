@@ -1,13 +1,17 @@
 const mongoose = require('mongoose')
+const config = require('../config')
 
-mongoose.connect(process.env.DB_URL, {
+const URL_DB = `mongodb://${config.mongoDB.DB_IP}:${config.mongoDB.DB_PORT}/${config.mongoDB.DB_COLLECTION}`
+
+mongoose.connect(URL_DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    useUnifiedTopology: true
 })
 
 mongoose.connection.on('connected', function() {
-    console.log('Mongoose connected to ' + process.env.DB_URL)
+    console.log('Mongoose connected to ' + URL_DB)
 })
 mongoose.connection.on('error', function(err) {
     console.log('Mongoose connection error: ' + err)
